@@ -42,13 +42,16 @@ class ProductController {
   static async update(req, res) {
     try {
       const id = req.params.id;
-      await ProductService.update(id, req.body);
-      return success(res, "Product updated");
+      const updatedProduct = await ProductService.update(id, req.body);
+
+      if (!updatedProduct) {
+        return error(res, "Product not found", 404);
+      }
+      return success(res, "Product updated", updatedProduct);
     } catch (err) {
       return error(res, err.message);
     }
   }
-
   // Delete a product
   static async delete(req, res) {
     try {
